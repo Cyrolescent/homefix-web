@@ -18,9 +18,9 @@ body {
     background: white;
     border-radius: 20px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    padding: 40px;
+    padding: 20px;
     width: 100%;
-    max-width: 420px;
+    max-width: 400px;
 }
 
 .logo {
@@ -30,14 +30,13 @@ body {
 
 .logo h1 {
     color: #667eea;
-    font-size: 2.2em;
+    font-size: 2.5em;
     margin-bottom: 5px;
 }
 
 .logo p {
     color: #666;
-    font-size: 1em;
-    font-weight: 500;
+    font-size: 0.9em;
 }
 
 .form-group {
@@ -48,8 +47,7 @@ body {
     display: block;
     margin-bottom: 8px;
     color: #333;
-    font-weight: 600;
-    font-size: 0.95em;
+    font-weight: 500;
 }
 
 .form-group input {
@@ -73,7 +71,6 @@ body {
     border-radius: 8px;
     margin-bottom: 20px;
     border-left: 4px solid #c33;
-    font-size: 0.9em;
 }
 
 .btn {
@@ -89,25 +86,19 @@ body {
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.btn:hover:not(:disabled) {
+.btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
 }
 
-.btn:active:not(:disabled) {
+.btn:active {
     transform: translateY(0);
-}
-
-.btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
 }
 
 .register-link {
     text-align: center;
     margin-top: 20px;
     color: #666;
-    font-size: 0.95em;
 }
 
 .register-link a {
@@ -118,35 +109,4 @@ body {
 
 .register-link a:hover {
     text-decoration: underline;
-}
-
-.back-link {
-    text-align: center;
-    margin-top: 15px;
-}
-
-.back-link a {
-    color: #999;
-    text-decoration: none;
-    font-size: 0.9em;
-}
-
-.back-link a:hover {
-    color: #667eea;
-    text-decoration: underline;
-}
-
-/* Responsive */
-@media (max-width: 480px) {
-    .login-container {
-        padding: 30px 25px;
-    }
-    
-    .logo h1 {
-        font-size: 1.8em;
-    }
-    
-    .logo p {
-        font-size: 0.9em;
-    }
 }

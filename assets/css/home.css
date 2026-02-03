@@ -2,26 +2,22 @@ html, body {
     margin: 0;
     padding: 0;
     height: 100%;
-    overflow: hidden; /* prevents extra scrolling */
-    font-family: "Poppins", sans-serif;
-    background: linear-gradient(rgb(0, 0, 0), rgba(33,20,127,1));
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
 }
 
-
-/* MAIN CONTAINER */
 .home-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: calc(100vh - 70px);
+    height: 100vh;
     padding: 80px;
     box-sizing: border-box;
     overflow: hidden;
 }
 
-
-/* LEFT SIDE (TEXT SECTION) */
 .text-section {
     max-width: 600px;
 }
@@ -34,63 +30,211 @@ html, body {
 }
 
 .logo-text {
-    font-size: 60px;
+    font-size: 48px;
     font-weight: 900;
     margin: 0 0 20px 0;
+    line-height: 1.2;
 }
 
 .logo-text span {
     display: inline-block;
 }
 
-/* Colorful MEDIADECK letters */
-.m { color: #C9C95B; }
-.e { color: #D4C95B; }
-.d { color: #A2A9F0; }
-.i { color: #7B85E3; }
-.a { color: #9A8AE8; }
-.d2 { color: #A885F2; }
-.e2 { color: #8D84E0; }
-.c { color: #F27260; }
-.k { color: #F79949; }
+/* Colorful letters for HOMEFIXSOLUTION */
+.h { color: #14140e; }
+.o { color: #352c1c; }
+.m { color: #3f2823; }
+.e { color: #290f1c; }
+.f { color: #331a32; }
+.i { color: #26122b; }
+.x { color: #161024; }
+.s { color: #141125; }
+.o2 { color: #111a2c; }
+.l { color: #060b18; }
+.u { color: #07101a; }
+.t { color: #0a3442; }
+.i2 { color: #2ad3d6; }
+.o3 { color: #113b3a; }
+.n { color: #133633; }
 
 .description {
-    font-size: 15px;
+    font-size: 16px;
     line-height: 1.7;
-    color: #ccc;
+    color: #f0f0f0;
     margin-bottom: 40px;
 }
 
-.about-button {
+.login-options {
+    margin-top: 40px;
+}
+
+.login-options h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.login-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.login-btn {
     text-decoration: none;
-    background-color: #3b4f94;
+    background-color: rgba(255, 255, 255, 0.2);
     color: white;
-    font-weight: bold;
-    padding: 10px 35px;
-    border-radius: 25px;
-    box-shadow: 0px 4px 8px rgba(0,0,0,0.3);
-    transition: all 0.2s ease-in-out;
+    font-weight: 600;
+    padding: 15px 25px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
 }
 
-.about-button:hover {
-    background-color: #5065c0;
-    transform: scale(1.05);
+.login-btn:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* RIGHT SIDE (IMAGE) */
+.login-btn .icon {
+    font-size: 24px;
+}
+
+.login-btn .text {
+    font-size: 16px;
+}
+
+.register-section {
+    margin-top: 30px;
+    font-size: 15px;
+    color: #f0f0f0;
+}
+
+.register-link {
+    color: #FFD700;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.register-link:hover {
+    text-decoration: underline;
+}
+
 .image-section {
     flex-shrink: 0;
 }
 
-.home-icons {
-  width: 470x;
-  opacity: 1;
-  position: absolute;
-  top: 94px;
-  left: 800px;
-  border-top-left-radius: 66px;
-  border-top-right-radius: 66px;
-  border-bottom-left-radius: 66px;
-  border-bottom-right-radius: 66px;
-  overflow: hidden;
+.home-illustration {
+    width: 400px;
+    height: 400px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    border: 3px solid rgba(255, 255, 255, 0.2);
+}
+
+.repair-icon {
+    font-size: 120px;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .home-container {
+        padding: 60px;
+    }
+    
+    .logo-text {
+        font-size: 40px;
+    }
+    
+    .home-illustration {
+        width: 300px;
+        height: 300px;
+    }
+    
+    .repair-icon {
+        font-size: 100px;
+    }
+}
+
+@media (max-width: 768px) {
+    .home-container {
+        flex-direction: column;
+        padding: 40px;
+        justify-content: center;
+    }
+    
+    .text-section {
+        max-width: 100%;
+        text-align: center;
+    }
+    
+    .logo-text {
+        font-size: 32px;
+    }
+    
+    .login-buttons {
+        justify-content: center;
+    }
+    
+    .home-illustration {
+        width: 250px;
+        height: 250px;
+        margin-top: 40px;
+    }
+    
+    .repair-icon {
+        font-size: 80px;
+    }
+}
+
+@media (max-width: 480px) {
+    .home-container {
+        padding: 20px;
+    }
+    
+    .logo-text {
+        font-size: 24px;
+    }
+    
+    .description {
+        font-size: 14px;
+    }
+    
+    .login-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .login-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .home-illustration {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .repair-icon {
+        font-size: 60px;
+    }
 }
