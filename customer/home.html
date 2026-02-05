@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - HomeFixSolution</title>
+    <link rel="stylesheet" href="../assets/css/customer-glass.css">
+</head>
+<body>
+    <!-- Background Decoration -->
+    <div class="bg-decoration"></div>
+    
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="assets/images/logo.png" alt="HomeFixSolution Logo" class="logo-main" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <h2 class="logo-text" style="display: none;">HomeFixSolution</h2>
+            <p class="user-role">Customer Portal</p>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="home.html" class="nav-item active">
+                <img src="assets/images/icons/home.png" alt="Home" class="nav-icon" onerror="this.style.display='none'">
+                <span>Home</span>
+            </a>
+            <a href="create-request.html" class="nav-item">
+                <img src="assets/images/icons/new-request.png" alt="New Request" class="nav-icon" onerror="this.style.display='none'">
+                <span>New Request</span>
+            </a>
+            <a href="my-requests.html" class="nav-item">
+                <img src="assets/images/icons/my-requests.png" alt="My Requests" class="nav-icon" onerror="this.style.display='none'">
+                <span>My Requests</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <img src="assets/images/icons/profile.png" alt="Profile" class="nav-icon" onerror="this.style.display='none'">
+                <span>Profile</span>
+            </a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <button onclick="logout()" class="logout-btn">
+                <img src="assets/images/icons/logout.png" alt="Logout" class="nav-icon" onerror="this.style.display='none'">
+                <span>Logout</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar glass-card">
+            <div>
+                <h1>Welcome Back!</h1>
+                <p class="subtitle">Manage your repair requests</p>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">
+                    <span id="user-initial">C</span>
+                </div>
+                <div class="user-details">
+                    <span id="user-name" class="user-name">Loading...</span>
+                    <span class="user-email" id="user-email">customer@example.com</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-container">
+            <div class="stat-card glass-card">
+                <div class="stat-content">
+                    <div class="stat-label">Total Requests</div>
+                    <div class="stat-value" id="total-requests">0</div>
+                </div>
+                <div class="stat-decoration"></div>
+            </div>
+            
+            <div class="stat-card glass-card stat-active">
+                <div class="stat-content">
+                    <div class="stat-label">Active Requests</div>
+                    <div class="stat-value" id="active-requests">0</div>
+                </div>
+                <div class="stat-decoration"></div>
+            </div>
+            
+            <div class="stat-card glass-card stat-completed">
+                <div class="stat-content">
+                    <div class="stat-label">Completed</div>
+                    <div class="stat-value" id="completed-requests">0</div>
+                </div>
+                <div class="stat-decoration"></div>
+            </div>
+        </div>
+
+        <!-- Recent Requests Section -->
+        <div class="section">
+            <div class="section-header">
+                <div>
+                    <h2>Recent Requests</h2>
+                    <p class="section-subtitle">Track your repair requests</p>
+                </div>
+                <a href="customer/create-request.html" class="btn-primary glass-btn">
+                    <span>+ New Request</span>
+                </a>
+            </div>
+
+            <div id="requests-container" class="requests-grid">
+                <!-- Request cards will be loaded here -->
+                <div class="loading glass-card">
+                    <div class="loading-spinner"></div>
+                    <p>Loading your requests...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/api.js"></script>
+    <script>
+        // Check if user is logged in
+        if (!isLoggedIn()) {
+            window.location.href = 'customer-login.html';
+        }
+
+        const user = getUser();
+        
+        // Verify user is a customer
+        if (user.role !== 'customer') {
+            localStorage.clear();
+            window.location.href = 'customer-login.html';
+        }
+
+        // Display user info
+        document.getElementById('user-name').textContent = user.name;
+        document.getElementById('user-email').textContent = user.email;
+        document.getElementById('user-initial').textContent = user.name.charAt(0).toUpperCase();
+
+        // Load dashboard data
+        async function loadDashboard() {
+            try {
+                const data = await apiCall('/api/customer/requests');
+                
+                if (data && data.success) {
+                    const requests = data.data.requests;
+                    
+                    // Update stats with animation
+                    animateValue('total-requests', 0, requests.length, 800);
+                    
+                    const activeCount = requests.filter(r => r.status === 'active').length;
+                    const completedCount = requests.filter(r => r.status === 'completed').length;
+                    
+                    animateValue('active-requests', 0, activeCount, 800);
+                    animateValue('completed-requests', 0, completedCount, 800);
+                    
+                    // Display requests (show 6 most recent)
+                    displayRequests(requests.slice(0, 6));
+                } else {
+                    document.getElementById('requests-container').innerHTML = 
+                        '<div class="no-data glass-card"><p>Failed to load requests. Please refresh the page.</p></div>';
+                }
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                document.getElementById('requests-container').innerHTML = 
+                    '<div class="no-data glass-card"><p>Error loading requests. Please try again.</p></div>';
+            }
+        }
+
+        function displayRequests(requests) {
+            const container = document.getElementById('requests-container');
+            
+            if (requests.length === 0) {
+                container.innerHTML = `
+                    <div class="no-data glass-card">
+                        <div class="empty-state">
+                            <h3>No requests yet</h3>
+                            <p>Start by creating your first repair request</p>
+                            <a href="customer/create-request.html" class="btn-primary glass-btn">Create Request</a>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = requests.map(request => `
+                <div class="request-card glass-card">
+                    <div class="request-header">
+                        <div class="device-info">
+                            <img src="assets/images/devices/${getDeviceImage(request.deviceType)}.png" 
+                                 alt="${request.deviceType}" 
+                                 class="device-icon"
+                                 onerror="this.src='assets/images/devices/default.png'; this.onerror=null;">
+                            <div class="device-details">
+                                <h3 class="device-name">${request.deviceType}</h3>
+                                <p class="device-issue">${request.issue}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="request-body">
+                        <div class="request-badges">
+                            <span class="badge badge-${request.status}">${request.status.toUpperCase()}</span>
+                            <span class="badge badge-phase">${formatPhase(request.currentPhase)}</span>
+                        </div>
+                        
+                        <div class="request-meta">
+                            <span class="meta-item">📅 ${formatDate(request.createdAt)}</span>
+                            <span class="meta-item">🆔 ${request.requestId.substring(0, 8)}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="request-footer">
+                        <button onclick="viewRequest('${request.requestId}')" class="btn-view glass-btn-secondary">
+                            View Details →
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getDeviceImage(deviceType) {
+            const type = deviceType.toLowerCase();
+            if (type.includes('laptop')) return 'laptop';
+            if (type.includes('phone') || type.includes('iphone') || type.includes('galaxy')) return 'phone';
+            if (type.includes('tablet') || type.includes('ipad')) return 'tablet';
+            if (type.includes('desktop') || type.includes('pc')) return 'desktop';
+            return 'default';
+        }
+
+        function viewRequest(requestId) {
+            window.location.href = `customer/request-details.html?id=${requestId}`;
+        }
+
+        // Animate number counting
+        function animateValue(id, start, end, duration) {
+            const element = document.getElementById(id);
+            const range = end - start;
+            const increment = range / (duration / 16);
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+                    current = end;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.round(current);
+            }, 16);
+        }
+
+        // Load dashboard on page load
+        loadDashboard();
+    </script>
+</body>
+</html>

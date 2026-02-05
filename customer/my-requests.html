@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Requests - HomeFixSolution</title>
+    <link rel="stylesheet" href="../assets/css/customer-glass.css">
+</head>
+<body>
+    <!-- Background Decoration -->
+    <div class="bg-decoration"></div>
+    
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="../assets/images/logo.png" alt="HomeFixSolution Logo" class="logo-main" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <h2 class="logo-text" style="display: none;">HomeFixSolution</h2>
+            <p class="user-role">Customer Portal</p>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="home.html" class="nav-item">
+                <img src="assets/images/icons/home.png" alt="Home" class="nav-icon" onerror="this.style.display='none'">
+                <span>Home</span>
+            </a>
+            <a href="create-request.html" class="nav-item">
+                <img src="assets/images/icons/new-request.png" alt="New Request" class="nav-icon" onerror="this.style.display='none'">
+                <span>New Request</span>
+            </a>
+            <a href="my-requests.html" class="nav-item active">
+                <img src="assets/images/icons/my-requests.png" alt="My Requests" class="nav-icon" onerror="this.style.display='none'">
+                <span>My Requests</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <img src="assets/images/icons/profile.png" alt="Profile" class="nav-icon" onerror="this.style.display='none'">
+                <span>Profile</span>
+            </a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <button onclick="logout()" class="logout-btn">
+                <img src="assets/images/icons/logout.png" alt="Logout" class="nav-icon" onerror="this.style.display='none'">
+                <span>Logout</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar glass-card">
+            <div>
+                <h1>My Requests</h1>
+                <p class="subtitle">View and manage all your repair requests</p>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">
+                    <span id="user-initial">C</span>
+                </div>
+                <div class="user-details">
+                    <span id="user-name" class="user-name">Loading...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="filter-tabs glass-card">
+            <button class="filter-tab active" data-status="all" onclick="filterRequests('all')">
+                All <span id="count-all" class="tab-count">0</span>
+            </button>
+            <button class="filter-tab" data-status="active" onclick="filterRequests('active')">
+                Active <span id="count-active" class="tab-count">0</span>
+            </button>
+            <button class="filter-tab" data-status="completed" onclick="filterRequests('completed')">
+                Completed <span id="count-completed" class="tab-count">0</span>
+            </button>
+            <button class="filter-tab" data-status="cancelled" onclick="filterRequests('cancelled')">
+                Cancelled <span id="count-cancelled" class="tab-count">0</span>
+            </button>
+        </div>
+
+        <!-- Requests Grid -->
+        <div id="requests-container" class="requests-grid">
+            <div class="loading glass-card">
+                <div class="loading-spinner"></div>
+                <p>Loading your requests...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/api.js"></script>
+    <script>
+        // Check if user is logged in
+        if (!isLoggedIn()) {
+            window.location.href = 'customer-login.html';
+        }
+
+        const user = getUser();
+        
+        // Verify user is a customer
+        if (user.role !== 'customer') {
+            localStorage.clear();
+            window.location.href = 'customer-login.html';
+        }
+
+        // Display user info
+        document.getElementById('user-name').textContent = user.name;
+        document.getElementById('user-initial').textContent = user.name.charAt(0).toUpperCase();
+
+        let allRequests = [];
+        let currentFilter = 'all';
+
+        // Load all requests
+        async function loadRequests() {
+            try {
+                const data = await apiCall('/api/customer/requests');
+                
+                if (data && data.success) {
+                    allRequests = data.data.requests;
+                    updateCounts();
+                    filterRequests(currentFilter);
+                } else {
+                    document.getElementById('requests-container').innerHTML = 
+                        '<div class="no-data glass-card"><p>Failed to load requests. Please refresh the page.</p></div>';
+                }
+            } catch (error) {
+                console.error('Error loading requests:', error);
+                document.getElementById('requests-container').innerHTML = 
+                    '<div class="no-data glass-card"><p>Error loading requests. Please try again.</p></div>';
+            }
+        }
+
+        // Update tab counts
+        function updateCounts() {
+            document.getElementById('count-all').textContent = allRequests.length;
+            document.getElementById('count-active').textContent = allRequests.filter(r => r.status === 'active').length;
+            document.getElementById('count-completed').textContent = allRequests.filter(r => r.status === 'completed').length;
+            document.getElementById('count-cancelled').textContent = allRequests.filter(r => r.status === 'cancelled').length;
+        }
+
+        // Filter requests by status
+        function filterRequests(status) {
+            currentFilter = status;
+            
+            // Update active tab
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.getAttribute('data-status') === status) {
+                    tab.classList.add('active');
+                }
+            });
+
+            // Filter and display
+            const filtered = status === 'all' 
+                ? allRequests 
+                : allRequests.filter(r => r.status === status);
+            
+            displayRequests(filtered);
+        }
+
+        // Display requests
+        function displayRequests(requests) {
+            const container = document.getElementById('requests-container');
+            
+            if (requests.length === 0) {
+                container.innerHTML = `
+                    <div class="no-data glass-card">
+                        <div class="empty-state">
+                            <h3>No ${currentFilter === 'all' ? '' : currentFilter} requests found</h3>
+                            <p>${currentFilter === 'all' ? 'Create your first repair request to get started' : ''}</p>
+                            ${currentFilter === 'all' ? '<a href="customer/create-request.html" class="btn-primary glass-btn">Create Request</a>' : ''}
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = requests.map(request => `
+                <div class="request-card glass-card">
+                    <div class="request-header">
+                        <div class="device-info">
+                            <img src="assets/images/devices/${getDeviceImage(request.deviceType)}.png" 
+                                 alt="${request.deviceType}" 
+                                 class="device-icon"
+                                 onerror="this.src='assets/images/devices/default.png'; this.onerror=null;">
+                            <div class="device-details">
+                                <h3 class="device-name">${request.deviceType}</h3>
+                                <p class="device-issue">${request.issue}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="request-body">
+                        <div class="request-badges">
+                            <span class="badge badge-${request.status}">${request.status.toUpperCase()}</span>
+                            <span class="badge badge-phase">${formatPhase(request.currentPhase)}</span>
+                        </div>
+                        
+                        <div class="request-meta">
+                            <span class="meta-item">📅 ${formatDate(request.createdAt)}</span>
+                            <span class="meta-item">🆔 ${request.requestId.substring(0, 8)}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="request-footer">
+                        <button onclick="viewRequest('${request.requestId}')" class="btn-view glass-btn-secondary">
+                            View Details →
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getDeviceImage(deviceType) {
+            const type = deviceType.toLowerCase();
+            if (type.includes('laptop')) return 'laptop';
+            if (type.includes('phone') || type.includes('iphone') || type.includes('galaxy')) return 'phone';
+            if (type.includes('tablet') || type.includes('ipad')) return 'tablet';
+            if (type.includes('desktop') || type.includes('pc')) return 'desktop';
+            return 'default';
+        }
+
+        function viewRequest(requestId) {
+            window.location.href = `customer/request-details.html?id=${requestId}`;
+        }
+
+        // Load requests on page load
+        loadRequests();
+    </script>
+    
+    <style>
+        .filter-tabs {
+            display: flex;
+            gap: 12px;
+            padding: 16px 20px;
+            border-radius: 20px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-tab {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.3);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .filter-tab:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .filter-tab.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .tab-count {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.85em;
+        }
+        
+        .filter-tab.active .tab-count {
+            background: rgba(255, 255, 255, 0.25);
+        }
+        
+        @media (max-width: 768px) {
+            .filter-tabs {
+                gap: 8px;
+            }
+            
+            .filter-tab {
+                padding: 10px 16px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</body>
+</html>

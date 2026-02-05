@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Request - HomeFixSolution</title>
+    <link rel="stylesheet" href="../assets/css/customer-glass.css">
+</head>
+<body>
+    <!-- Background Decoration -->
+    <div class="bg-decoration"></div>
+    
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="assets/images/logo.png" alt="HomeFixSolution Logo" class="logo-main" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <h2 class="logo-text" style="display: none;">HomeFixSolution</h2>
+            <p class="user-role">Customer Portal</p>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="home.html" class="nav-item">
+                <img src="assets/images/icons/home.png" alt="Home" class="nav-icon" onerror="this.style.display='none'">
+                <span>Home</span>
+            </a>
+            <a href="create-request.html" class="nav-item active">
+                <img src="assets/images/icons/new-request.png" alt="New Request" class="nav-icon" onerror="this.style.display='none'">
+                <span>New Request</span>
+            </a>
+            <a href="my-requests.html" class="nav-item">
+                <img src="assets/images/icons/my-requests.png" alt="My Requests" class="nav-icon" onerror="this.style.display='none'">
+                <span>My Requests</span>
+            </a>
+            <a href="profile.html" class="nav-item">
+                <img src="assets/images/icons/profile.png" alt="Profile" class="nav-icon" onerror="this.style.display='none'">
+                <span>Profile</span>
+            </a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <button onclick="logout()" class="logout-btn">
+                <img src="assets/images/icons/logout.png" alt="Logout" class="nav-icon" onerror="this.style.display='none'">
+                <span>Logout</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar glass-card">
+            <div>
+                <h1>Create New Request</h1>
+                <p class="subtitle">Submit your device for repair</p>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">
+                    <span id="user-initial">C</span>
+                </div>
+                <div class="user-details">
+                    <span id="user-name" class="user-name">Loading...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Request Form -->
+        <div class="form-section glass-card">
+            <div id="error-message" class="alert alert-error" style="display: none;"></div>
+            <div id="success-message" class="alert alert-success" style="display: none;"></div>
+            
+            <form id="create-request-form">
+                <div class="form-group">
+                    <label for="deviceType">Device Type *</label>
+                    <input type="text" id="deviceType" name="deviceType" required 
+                           placeholder="e.g., iPhone 12, Dell Laptop, Samsung Galaxy Tab">
+                    <small class="form-hint">What device needs repair?</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="issue">Issue / Problem *</label>
+                    <input type="text" id="issue" name="issue" required 
+                           placeholder="e.g., Screen not turning on, Battery draining fast">
+                    <small class="form-hint">Briefly describe the main problem</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Detailed Description (Optional)</label>
+                    <textarea id="description" name="description" rows="6" 
+                              placeholder="Please provide more details about the problem... When did it start? Have you tried anything? Any other important information?"></textarea>
+                    <small class="form-hint">The more details you provide, the better we can help you!</small>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" onclick="window.location.href='customer/home.html'" class="btn-secondary glass-btn-secondary">
+                        Cancel
+                    </button>
+                    <button type="submit" id="submit-btn" class="btn-primary">
+                        Submit Request
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Info Box -->
+        <div class="info-box glass-card">
+            <h3>📋 What happens next?</h3>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-number">1</div>
+                    <div class="timeline-content">
+                        <strong>Technician Accepts</strong>
+                        <p>A skilled technician will accept your request</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-number">2</div>
+                    <div class="timeline-content">
+                        <strong>Device Hand-off</strong>
+                        <p>Hand over your device at HQ or technician's address</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-number">3</div>
+                    <div class="timeline-content">
+                        <strong>Inspection</strong>
+                        <p>Technician inspects and provides cost estimate</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-number">4</div>
+                    <div class="timeline-content">
+                        <strong>Your Approval</strong>
+                        <p>Review and approve the repair cost</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-number">5</div>
+                    <div class="timeline-content">
+                        <strong>Repair Work</strong>
+                        <p>Technician fixes your device</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-number">6</div>
+                    <div class="timeline-content">
+                        <strong>Pickup</strong>
+                        <p>Choose pickup at HQ or delivery to your address</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-number">7</div>
+                    <div class="timeline-content">
+                        <strong>Payment</strong>
+                        <p>Pay cash when you collect your device</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/api.js"></script>
+    <script>
+        // Check if user is logged in
+        if (!isLoggedIn()) {
+            window.location.href = 'customer-login.html';
+        }
+
+        const user = getUser();
+        
+        // Verify user is a customer
+        if (user.role !== 'customer') {
+            localStorage.clear();
+            window.location.href = 'customer-login.html';
+        }
+
+        // Display user info
+        document.getElementById('user-name').textContent = user.name;
+        document.getElementById('user-initial').textContent = user.name.charAt(0).toUpperCase();
+
+        // Handle form submission
+        const createRequestForm = document.getElementById('create-request-form');
+        const errorMessage = document.getElementById('error-message');
+        const successMessage = document.getElementById('success-message');
+        const submitBtn = document.getElementById('submit-btn');
+
+        createRequestForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const deviceType = document.getElementById('deviceType').value.trim();
+            const issue = document.getElementById('issue').value.trim();
+            const description = document.getElementById('description').value.trim();
+            
+            // Hide messages
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+            
+            // Validate
+            if (!deviceType || !issue) {
+                errorMessage.textContent = 'Please fill in all required fields.';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            // Disable button
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            
+            try {
+                const data = await apiCall('/api/customer/request', 'POST', {
+                    deviceType,
+                    issue,
+                    description,
+                    images: []
+                });
+                
+                if (data && data.success) {
+                    successMessage.textContent = 'Request created successfully! Redirecting...';
+                    successMessage.style.display = 'block';
+                    
+                    // Reset form
+                    createRequestForm.reset();
+                    
+                    // Redirect after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = 'customer/home.html';
+                    }, 2000);
+                } else {
+                    errorMessage.textContent = data?.message || 'Failed to create request. Please try again.';
+                    errorMessage.style.display = 'block';
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Request';
+                }
+            } catch (error) {
+                console.error('Error creating request:', error);
+                errorMessage.textContent = 'Network error. Please check your connection and try again.';
+                errorMessage.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Request';
+            }
+        });
+    </script>
+    
+    <style>
+        .form-section {
+            padding: 32px;
+            border-radius: 20px;
+            margin-bottom: 32px;
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 1em;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            font-size: 1em;
+            font-family: inherit;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            color: var(--text-dark);
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: rgba(255, 255, 255, 0.7);
+        }
+        
+        .form-hint {
+            display: block;
+            margin-top: 6px;
+            font-size: 0.85em;
+            color: var(--text-light);
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: flex-end;
+            margin-top: 32px;
+        }
+        
+        .btn-secondary {
+            background: rgba(108, 117, 125, 0.15);
+            color: var(--text-dark);
+            padding: 14px 32px;
+            border: 1px solid rgba(108, 117, 125, 0.3);
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(108, 117, 125, 0.25);
+            transform: translateY(-2px);
+        }
+        
+        .alert {
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+        }
+        
+        .alert-error {
+            background: rgba(220, 53, 69, 0.15);
+            color: var(--danger);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+        }
+        
+        .alert-success {
+            background: rgba(40, 167, 69, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+        
+        .info-box {
+            padding: 32px;
+            border-radius: 20px;
+        }
+        
+        .info-box h3 {
+            color: var(--primary-color);
+            margin-bottom: 24px;
+            font-size: 1.3em;
+        }
+        
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .timeline-item {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        
+        .timeline-number {
+            min-width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.95em;
+            flex-shrink: 0;
+        }
+        
+        .timeline-content strong {
+            display: block;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+            font-size: 1em;
+        }
+        
+        .timeline-content p {
+            color: var(--text-light);
+            font-size: 0.9em;
+            margin: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .form-actions {
+                flex-direction: column-reverse;
+            }
+            
+            .form-actions button {
+                width: 100%;
+            }
+        }
+    </style>
+</body>
+</html>
